@@ -10,21 +10,41 @@ from .streams import Streams
 class Image:
     """Base cloud image to set default mirror URL and keyring."""
 
-    def __init__(self, daily=False, minimal=False):
+    name = 'unknown'
+
+    def __init__(self, release='unknown', daily=False, minimal=False):
         """Initialize base image."""
         self._log = logging.getLogger(__name__)
-        self.filter = None
-        self.keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
 
+        self.daily = daily
+        self.keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
+        self.minimal = minimal
+        self.mirror_url = self._mirror_url()
+        self.release = release
+
+    def __repr__(self):
+        """Return string representation of class."""
+        return '%s%s%s image for %s' % (
+            'daily ' if self.daily else '',
+            'minimal ' if self.minimal else '',
+            self.release,
+            self.name
+        )
+
+    def _mirror_url(self):
+        """Create mirror URL baed on filter settings."""
         mirror_base_url = 'https://cloud-images.ubuntu.com'
-        if minimal and daily:
-            self.mirror_url = '%s/minimal/daily/' % mirror_base_url
-        elif minimal:
-            self.mirror_url = '%s/minimal/releases/' % mirror_base_url
-        elif daily:
-            self.mirror_url = '%s/daily/' % mirror_base_url
-        else:
-            self.mirror_url = '%s/releases/' % mirror_base_url
+
+        if self.minimal and self.daily:
+            return '%s/minimal/daily/' % mirror_base_url
+
+        if self.minimal:
+            return '%s/minimal/releases/' % mirror_base_url
+
+        if self.daily:
+            return '%s/daily/' % mirror_base_url
+
+        return '%s/releases/' % mirror_base_url
 
     def search(self):
         """Find list of images with the setup filter.
@@ -52,6 +72,8 @@ class Image:
 class AWS(Image):
     """AWS class."""
 
+    name = 'AWS'
+
     def __init__(self, release=None, region=None, root_store='ssd',
                  daily=False, minimal=False):
         """Initialize AWS instance.
@@ -63,20 +85,38 @@ class AWS(Image):
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(daily, minimal)
+        super().__init__(release, daily, minimal)
 
-        self.filter = [
+        self.region = region
+        self.root_store = root_store
+
+    def __repr__(self):
+        """Return string representation of class."""
+        return '%s%s%s image for %s (%s)' % (
+            'daily ' if self.daily else '',
+            'minimal ' if self.minimal else '',
+            self.release,
+            self.name,
+            self.region
+        )
+
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
             'arch=amd64',
-            'endpoint=https://ec2.%s.amazonaws.com' % region,
-            'region=%s' % region,
-            'release=%s' % release,
-            'root_store=%s' % root_store,
+            'endpoint=https://ec2.%s.amazonaws.com' % self.region,
+            'region=%s' % self.region,
+            'release=%s' % self.release,
+            'root_store=%s' % self.root_store,
             'virt=hvm',
         ]
 
 
 class AWSChina(AWS):
     """AWS China class."""
+
+    name = 'AWS China'
 
     def __init__(self, release=None, region=None, root_store='ssd'):
         """Initialize AWS China instance.
@@ -88,20 +128,25 @@ class AWSChina(AWS):
             region: str, Cloud region
             root_store: str, either ssd or instance
         """
-        super().__init__()
+        super().__init__(release, region, root_store)
 
-        self.filter = [
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
             'arch=amd64',
-            'endpoint=https://ec2.%s.amazonaws.com.cn' % region,
-            'region=%s' % region,
-            'release=%s' % release,
-            'root_store=%s' % root_store,
+            'endpoint=https://ec2.%s.amazonaws.com.cn' % self.region,
+            'region=%s' % self.region,
+            'release=%s' % self.release,
+            'root_store=%s' % self.root_store,
             'virt=hvm',
         ]
 
 
 class AWSGovCloud(AWS):
     """AWS GovCloud class."""
+
+    name = 'AWS GovCloud'
 
     def __init__(self, release=None, region=None, root_store='ssd'):
         """Initialize AWS instance.
@@ -113,20 +158,25 @@ class AWSGovCloud(AWS):
             region: str, Cloud region
             root_store: str, either ssd or instance
         """
-        super().__init__()
+        super().__init__(release, region, root_store)
 
-        self.filter = [
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
             'arch=amd64',
-            'endpoint=https://ec2.%s.amazonaws-govcloud.com' % region,
-            'region=%s' % region,
-            'release=%s' % release,
-            'root_store=%s' % root_store,
+            'endpoint=https://ec2.%s.amazonaws-govcloud.com' % self.region,
+            'region=%s' % self.region,
+            'release=%s' % self.release,
+            'root_store=%s' % self.root_store,
             'virt=hvm',
         ]
 
 
 class Azure(Image):
     """Azure class."""
+
+    name = 'Azure'
 
     def __init__(self, release=None, region=None, daily=False):
         """Initialize Azure instance.
@@ -138,18 +188,35 @@ class Azure(Image):
             region: str, Cloud region
             daily: boolean, find daily image (default: false)
         """
-        super().__init__(daily)
+        super().__init__(release, daily)
 
-        self.filter = [
+        self.region = region
+
+    def __repr__(self):
+        """Return string representation of class."""
+        return '%s%s%s image for %s (%s)' % (
+            'daily ' if self.daily else '',
+            'minimal ' if self.minimal else '',
+            self.release,
+            self.name,
+            self.region
+        )
+
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
             'arch=amd64',
             'endpoint=https://management.core.windows.net/',
-            'region=%s' % region,
-            'release=%s' % release
+            'region=%s' % self.region,
+            'release=%s' % self.release
         ]
 
 
 class GCE(Image):
     """GCE class."""
+
+    name = 'GCE'
 
     def __init__(self, release=None, region=None, daily=False, minimal=False):
         """Initialize GCE instance.
@@ -160,19 +227,36 @@ class GCE(Image):
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(daily, minimal)
+        super().__init__(release, daily, minimal)
 
-        self.filter = [
+        self.region = region
+
+    def __repr__(self):
+        """Return string representation of class."""
+        return '%s%s%s image for %s (%s)' % (
+            'daily ' if self.daily else '',
+            'minimal ' if self.minimal else '',
+            self.release,
+            self.name,
+            self.region
+        )
+
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
             'arch=amd64',
             'endpoint=https://www.googleapis.com',
-            'region=%s' % region,
-            'release=%s' % release
+            'region=%s' % self.region,
+            'release=%s' % self.release
         ]
 
 
 class KVM(Image):
     """KVM class."""
 
+    name = 'KVM'
+
     def __init__(self, release=None, arch='amd64', daily=False, minimal=False):
         """Initialize KVM instance.
 
@@ -182,18 +266,25 @@ class KVM(Image):
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(daily, minimal)
+        super().__init__(release, daily, minimal)
 
-        self.filter = [
-            'arch=%s' % arch,
+        self.arch = arch
+
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
+            'arch=%s' % self.arch,
             'ftype=disk1.img',
-            'release=%s' % release
+            'release=%s' % self.release
         ]
 
 
 class LXC(Image):
     """LXC class."""
 
+    name = 'LXC'
+
     def __init__(self, release=None, arch='amd64', daily=False, minimal=False):
         """Initialize KVM instance.
 
@@ -203,17 +294,24 @@ class LXC(Image):
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(daily, minimal)
+        super().__init__(release, daily, minimal)
 
-        self.filter = [
-            'arch=%s' % arch,
+        self.arch = arch
+
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
+            'arch=%s' % self.arch,
             'ftype=squashfs',
-            'release=%s' % release
+            'release=%s' % self.release
         ]
 
 
 class MAASv2(Image):
     """MAAS v2 class."""
+
+    name = 'MAAS (v2)'
 
     def __init__(self, release=None, arch='amd64', kernel='generic',
                  daily=False):
@@ -227,23 +325,31 @@ class MAASv2(Image):
             kernel: str, kernel flavor (default: generic)
             daily: boolean, find daily image (default: false)
         """
-        super().__init__(daily)
+        super().__init__(release, daily)
+
+        self.arch = arch
+        self.kernel = kernel
 
         if daily:
             self.mirror_url = 'https://images.maas.io/ephemeral-v2/daily/'
         else:
             self.mirror_url = 'https://images.maas.io/ephemeral-v2/releases/'
 
-        self.filter = [
-            'arch=%s' % arch,
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
+            'arch=%s' % self.arch,
             'ftype=root-image.gz',
-            'kflavor=%s' % kernel,
-            'release=%s' % release
+            'kflavor=%s' % self.kernel,
+            'release=%s' % self.release
         ]
 
 
 class MAASv3(Image):
     """MAAS v3 class."""
+
+    name = 'MAAS'
 
     def __init__(self, release=None, arch='amd64', kernel='generic'):
         """Initialize MAAS v3 instance.
@@ -255,13 +361,18 @@ class MAASv3(Image):
             arch: str, base architecture
             kernel: str, kernel flavor (default: generic)
         """
-        super().__init__()
+        super().__init__(release)
 
+        self.arch = arch
+        self.kernel = kernel
         self.mirror_url = 'https://images.maas.io/ephemeral-v3/daily/'
 
-        self.filter = [
-            'arch=%s' % arch,
+    @property
+    def filter(self):
+        """Create filter."""
+        return [
+            'arch=%s' % self.arch,
             'ftype=squashfs',
-            'kflavor=%s' % kernel,
-            'release=%s' % release
+            'kflavor=%s' % self.kernel,
+            'release=%s' % self.release
         ]

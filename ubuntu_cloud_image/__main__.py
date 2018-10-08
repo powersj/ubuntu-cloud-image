@@ -250,11 +250,9 @@ def launch():
     """Launch ubuntu-cloud-image."""
     cli = vars(parse_args())
     log = setup_logging(cli.pop('debug'))
-    cloud = cli.pop('command')
 
-    log.debug('searching cloud: %s', cloud)
-    log.debug('provided arguments: %s', cli)
-    cloud = CLOUDS[cloud](**cli)
+    cloud = CLOUDS[cli.pop('command')](**cli)
+    log.debug(cloud)
     cloud.search()
 
 

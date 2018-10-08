@@ -43,7 +43,6 @@ class Streams:
         s_mirror = mirrors.UrlMirrorReader(url, policy=policy)
 
         config = {'filters': filters.get_filters(img_filter)}
-        self._log.debug('generated streams filter: %s', config)
 
         t_mirror = FilterMirror(config)
         t_mirror.sync(s_mirror, path)
