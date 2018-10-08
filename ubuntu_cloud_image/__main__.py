@@ -2,6 +2,7 @@
 """Ubuntu Cloud Image main module."""
 
 import argparse
+import logging
 import sys
 
 from . import image
@@ -22,6 +23,12 @@ CLOUDS = {
 def parse_args():  # pylint: disable=too-many-statements
     """Set up command-line arguments."""
     parser = argparse.ArgumentParser('ubuntu-cloud-image')
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='additional debug output'
+    )
+
     subparsers = parser.add_subparsers()
     subparsers.required = True
     subparsers.dest = 'command'
@@ -68,16 +75,6 @@ def parse_args():  # pylint: disable=too-many-statements
         help='cloud region (e.g. cn-north-1)'
     )
     aws_cn.add_argument(
-        '--daily',
-        action='store_true',
-        help='daily image'
-    )
-    aws_cn.add_argument(
-        '--minimal',
-        action='store_true',
-        help='minimal image'
-    )
-    aws_cn.add_argument(
         '--root-store',
         default='ssd',
         choices=['ssd', 'instance'],
@@ -95,16 +92,6 @@ def parse_args():  # pylint: disable=too-many-statements
     aws_govcloud.add_argument(
         'region',
         help='cloud region (e.g. us-gov-west-1)'
-    )
-    aws_govcloud.add_argument(
-        '--daily',
-        action='store_true',
-        help='daily image'
-    )
-    aws_govcloud.add_argument(
-        '--minimal',
-        action='store_true',
-        help='minimal image'
     )
     aws_govcloud.add_argument(
         '--root-store',
@@ -248,16 +235,27 @@ def parse_args():  # pylint: disable=too-many-statements
     return parser.parse_args()
 
 
+def setup_logging(debug):
+    """Config logging mechanism."""
+    logging.basicConfig(
+        stream=sys.stdout,
+        format='%(message)s',
+        level=logging.DEBUG if debug else logging.INFO
+    )
+
+    return logging.getLogger(__name__)
+
+
 def launch():
     """Launch ubuntu-cloud-image."""
-    cli = parse_args()
-    cloud = vars(cli).pop('command')
-    args = vars(cli)
+    cli = vars(parse_args())
+    log = setup_logging(cli.pop('debug'))
+    cloud = cli.pop('command')
 
-    print(cloud)
-    print(args)
-    cloud = CLOUDS[cloud](**args)
-    print(cloud.find())
+    log.debug('searching cloud: %s', cloud)
+    log.debug('provided arguments: %s', cli)
+    cloud = CLOUDS[cloud](**cli)
+    cloud.search()
 
 
 if __name__ == '__main__':

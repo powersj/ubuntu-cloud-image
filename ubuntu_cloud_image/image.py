@@ -1,6 +1,9 @@
 # This file is part of ubuntu-cloud-image. See LICENSE for license information.
 """Ubuntu Cloud Image class."""
 
+import json
+import logging
+
 from .streams import Streams
 
 
@@ -9,10 +12,11 @@ class Image:
 
     def __init__(self, daily=False, minimal=False):
         """Initialize base image."""
+        self._log = logging.getLogger(__name__)
         self.filter = None
         self.keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
 
-        mirror_base_url = 'https://cloud-images.ubuntu.com/'
+        mirror_base_url = 'https://cloud-images.ubuntu.com'
         if minimal and daily:
             self.mirror_url = '%s/minimal/daily/' % mirror_base_url
         elif minimal:
@@ -22,11 +26,14 @@ class Image:
         else:
             self.mirror_url = '%s/releases/' % mirror_base_url
 
-    def find(self):
+    def search(self):
         """Find list of images with the setup filter.
 
         Returns:
-            list of dictionaries of images
+            dictionary of discovered image
+
+        Raises:
+            SystemExit: when no results found
 
         """
         stream = Streams(
@@ -35,9 +42,11 @@ class Image:
         )
 
         try:
-            return stream.query(self.filter)[0]
+            result = stream.query(self.filter)[0]
         except IndexError:
-            return {}
+            result = {}
+
+        self._log.info(json.dumps(result, sort_keys=True, indent=4))
 
 
 class AWS(Image):
