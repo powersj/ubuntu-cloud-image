@@ -1,9 +1,31 @@
 name: ubuntu-cloud-image
 summary: Find the latest Ubuntu Images for clouds
 description: |
-  TODO
+    This is used to find the latest Ubuntu image information for
+    clouds. The following clouds are supported
+
+    * Amazon Web Services (aws)
+    * Amazon Web Services China (aws-cn)
+    * Amazon Web Services GovCloud (aws-govcloud)
+    * Microsoft Azure (azure)
+    * Google Compute Engine (gce)
+    * Kernel-based Virtual Machine (kvm)
+    * Linux Containers (lxc)
+    * Metal as a Service (MAAS) Version 2 (maasv2)
+    * Metal as a Service (MAAS) Version 3 (maas)
+
+    The program uses the streams output provided by various clouds to
+    determine the latest images available on clouds. Where they are
+    supported this includes the latest daily, minimal, and daily
+    minimal images as well. Daily and minimal images are enabled with
+    the `--daily` and `--minimal` flags.
+
+    The output is the full JSON output from streams providing details
+    about the requested image. If no image matches the specific filter
+    then an empty JSON array is printed.
 
 version: git
+version-script: git rev-parse --short HEAD
 grade: stable
 confinement: strict
 environment:
@@ -14,12 +36,17 @@ apps:
     ubuntu-cloud-image:
         command: bin/ubuntu-cloud-image
         plugs:
-            - browser-support
-            - desktop
             - network
+            - network-bind
 
 parts:
     ubuntu-cloud-image:
         plugin: python
         source: https://github.com/powersj/ubuntu-cloud-image
         source-type: git
+    cloud-keyring:
+        plugin: nil
+        stage-packages:
+            - https://packages.ubuntu.com/xenial/ubuntu-cloudimage-keyring
+        stage:
+            - usr/share/keyrings/ubuntu-cloudimage-keyring.gpg
