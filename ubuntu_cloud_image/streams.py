@@ -36,7 +36,7 @@ class Streams:
 
         """
         def policy(content, path):  # pylint: disable=W0613
-            """TODO."""
+            """Read signed content with the defined keyring."""
             return s_util.read_signed(content, keyring=self.keyring_path)
 
         (url, path) = s_util.path_from_mirror_url(self.mirror_url, None)
