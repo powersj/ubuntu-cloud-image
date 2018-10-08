@@ -88,10 +88,10 @@ class FilterMirror(mirrors.BasicMirrorWriter):
         """Filter items based on filter.
 
         Args:
-            data: TBD
-            src: TBD
-            target: TBD
-            pedigree: TBD
+            data: Streams data
+            src: Top level products
+            target: Top level products
+            pedigree: No freaking clue
 
         Returns:
             Filtered items
@@ -108,10 +108,10 @@ class FilterMirror(mirrors.BasicMirrorWriter):
 
         Args:
             data: Data from simplestreams
-            src: TBD
-            target: TBD
-            pedigree: TBD
-            contentsource: TBD
+            src: Top level products
+            target: Top level products
+            pedigree: Still no freaking clue
+            contentsource: If source exists or None
         """
         data = s_util.products_exdata(src, pedigree)
 

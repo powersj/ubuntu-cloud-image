@@ -123,7 +123,7 @@ def parse_args():  # pylint: disable=too-many-statements
     )
     azure.add_argument(
         'region',
-        help='cloud region (e.g. US West)'
+        help='cloud region (e.g. \'West US\')'
     )
     azure.add_argument(
         '--daily',
