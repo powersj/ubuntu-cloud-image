@@ -1,2 +1,1 @@
-tabulate
 git+https://git.launchpad.net/simplestreams

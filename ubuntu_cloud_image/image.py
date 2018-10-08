@@ -31,6 +31,11 @@ class Image:
             self.name
         )
 
+    @property
+    def filter(self):
+        """Create filter."""
+        return []
+
     def _mirror_url(self):
         """Create mirror URL baed on filter settings."""
         mirror_base_url = 'https://cloud-images.ubuntu.com'

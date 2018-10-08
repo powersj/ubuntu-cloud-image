@@ -1,14 +1,10 @@
-"""Setup.py file."""
+# This file is part of ubuntu-cloud-image. See LICENSE for license information.
+"""Ubuntu Cloud Image setup.py."""
 
 import os
 from setuptools import find_packages, setup
 
 PWD = os.path.abspath(os.path.dirname(__name__))
-REQUIREMENTS_FILE = os.path.join(PWD, 'requirements.txt')
-REQUIREMENTS = []
-with open(REQUIREMENTS_FILE, 'r') as req_file:
-    REQUIREMENTS = req_file.read().splitlines()
-
 README_FILE = os.path.join(PWD, 'README.md')
 with open(README_FILE, 'r') as readme:
     README_TEXT = readme.read()
@@ -25,7 +21,6 @@ setup(
     download_url=(
         'https://github.com/powersj/ubuntu-cloud-image/tarball/master'
     ),
-    install_requires=REQUIREMENTS,
     python_requires='>=3.4',
     classifiers=[
         "Development Status :: 5 - Production/Stable",

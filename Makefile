@@ -9,6 +9,7 @@ clean:
 	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete
 
 install:
+	pip install -r requirements.txt
 	$(SETUP) install
 
 publish:
