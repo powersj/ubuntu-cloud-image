@@ -44,9 +44,13 @@ parts:
         plugin: python
         source: https://github.com/powersj/ubuntu-cloud-image
         source-type: git
-    cloud-keyring:
+    keyring:
         plugin: nil
         stage-packages:
-            - https://packages.ubuntu.com/xenial/ubuntu-cloudimage-keyring
+            - ubuntu-cloudimage-keyring
         stage:
             - usr/share/keyrings/ubuntu-cloudimage-keyring.gpg
+    simplestreams:
+        plugin: python
+        source: https://git.launchpad.net/simplestreams
+        source-type: git

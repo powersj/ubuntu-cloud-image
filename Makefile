@@ -19,7 +19,7 @@ publish:
 	twine upload dist/*
 
 snap:
-	snapcraft cleanbuild
+	snapcraft cleanbuild --debug
 
 test:
 	$(SETUP) check -r -s

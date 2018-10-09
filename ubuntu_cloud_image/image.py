@@ -3,6 +3,7 @@
 
 import json
 import logging
+import os
 
 from .streams import Streams
 
@@ -17,7 +18,6 @@ class Image:
         self._log = logging.getLogger(__name__)
 
         self.daily = daily
-        self.keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
         self.minimal = minimal
         self.mirror_url = self._mirror_url()
         self.release = release
@@ -61,9 +61,14 @@ class Image:
             SystemExit: when no results found
 
         """
+        keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
+        snap = os.getenv('SNAP')
+        if snap:
+            keyring_path = '%s%s' % (snap, keyring_path)
+
         stream = Streams(
             mirror_url=self.mirror_url,
-            keyring_path=self.keyring_path
+            keyring_path=keyring_path
         )
 
         try:
