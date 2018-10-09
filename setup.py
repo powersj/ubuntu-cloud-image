@@ -11,8 +11,8 @@ with open(README_FILE, 'r') as readme:
 
 setup(
     name='ubuntu-cloud-image',
-    version='18.0',
-    description='Download the newest Ubuntu ISOs and cloud images.',
+    version='18.1',
+    description='Download the newest Ubuntu cloud images.',
     long_description=README_TEXT,
     long_description_content_type='text/markdown',
     author='Joshua Powers',
