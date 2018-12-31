@@ -1,1 +1,1 @@
-git+https://git.launchpad.net/simplestreams
+git+https://git.launchpad.net/simplestreams@21c5bba2a5413c51e6b9131fc450e96f6b46090d

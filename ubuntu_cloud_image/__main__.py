@@ -56,6 +56,12 @@ def parse_args():  # pylint: disable=too-many-statements
         help='minimal image'
     )
     aws.add_argument(
+        '--arch',
+        default='amd64',
+        choices=['amd64', 'arm64'],
+        help='architecture (default: amd64)'
+    )
+    aws.add_argument(
         '--root-store',
         default='ssd',
         choices=['ssd', 'instance'],
@@ -75,6 +81,12 @@ def parse_args():  # pylint: disable=too-many-statements
         help='cloud region (e.g. cn-north-1)'
     )
     aws_cn.add_argument(
+        '--arch',
+        default='amd64',
+        choices=['amd64', 'arm64'],
+        help='architecture (default: amd64)'
+    )
+    aws_cn.add_argument(
         '--root-store',
         default='ssd',
         choices=['ssd', 'instance'],
@@ -92,6 +104,12 @@ def parse_args():  # pylint: disable=too-many-statements
     aws_govcloud.add_argument(
         'region',
         help='cloud region (e.g. us-gov-west-1)'
+    )
+    aws_govcloud.add_argument(
+        '--arch',
+        default='amd64',
+        choices=['amd64', 'arm64'],
+        help='architecture (default: amd64)'
     )
     aws_govcloud.add_argument(
         '--root-store',
@@ -117,6 +135,12 @@ def parse_args():  # pylint: disable=too-many-statements
         action='store_true',
         help='daily image'
     )
+    azure.add_argument(
+        '--arch',
+        default='amd64',
+        choices=['amd64'],
+        help='architecture (default: amd64)'
+    )
 
     gce = subparsers.add_parser(
         'gce',
@@ -140,6 +164,12 @@ def parse_args():  # pylint: disable=too-many-statements
         action='store_true',
         help='minimal image'
     )
+    gce.add_argument(
+        '--arch',
+        default='amd64',
+        choices=['amd64'],
+        help='architecture (default: amd64)'
+    )
 
     kvm = subparsers.add_parser(
         'kvm',
@@ -162,6 +192,7 @@ def parse_args():  # pylint: disable=too-many-statements
     kvm.add_argument(
         '--arch',
         default='amd64',
+        choices=['amd64', 'arm64', 'ppc64el', 's390x', 'armhf', 'i386'],
         help='architecture (default: amd64)'
     )
 
@@ -186,6 +217,7 @@ def parse_args():  # pylint: disable=too-many-statements
     lxc.add_argument(
         '--arch',
         default='amd64',
+        choices=['amd64', 'arm64', 'ppc64el', 's390x', 'armhf', 'i386'],
         help='architecture (default: amd64)'
     )
 
@@ -205,6 +237,7 @@ def parse_args():  # pylint: disable=too-many-statements
     maasv2.add_argument(
         '--arch',
         default='amd64',
+        choices=['amd64', 'arm64', 'ppc64el', 's390x', 'armhf', 'i386'],
         help='architecture (default: amd64)'
     )
     maasv2.add_argument(
@@ -224,6 +257,7 @@ def parse_args():  # pylint: disable=too-many-statements
     maasv3.add_argument(
         '--arch',
         default='amd64',
+        choices=['amd64', 'arm64', 'ppc64el', 's390x', 'armhf', 'i386'],
         help='architecture (default: amd64)'
     )
     maasv3.add_argument(

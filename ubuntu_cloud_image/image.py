@@ -13,21 +13,24 @@ class Image:
 
     name = 'unknown'
 
-    def __init__(self, release='unknown', daily=False, minimal=False):
+    def __init__(self, release, arch, daily=False, minimal=False):
         """Initialize base image."""
         self._log = logging.getLogger(__name__)
 
+        self.release = release
+        self.arch = arch
         self.daily = daily
         self.minimal = minimal
+
         self.mirror_url = self._mirror_url()
-        self.release = release
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s image for %s' % (
+        return '%s%s%s (%s) image for %s' % (
             'daily ' if self.daily else '',
             'minimal ' if self.minimal else '',
             self.release,
+            self.arch,
             self.name
         )
 
@@ -84,28 +87,30 @@ class AWS(Image):
 
     name = 'AWS'
 
-    def __init__(self, release=None, region=None, root_store='ssd',
+    def __init__(self, release, arch, region, root_store='ssd',
                  daily=False, minimal=False):
         """Initialize AWS instance.
 
         Args:
             release: str, Ubuntu release codename
+            arch: str, architecture of image
             region: str, Cloud region
             root_store: str, either ssd or instance
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(release, daily, minimal)
+        super().__init__(release, arch, daily, minimal)
 
         self.region = region
         self.root_store = root_store
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s image for %s (%s)' % (
+        return '%s%s%s (%s) image for %s (%s)' % (
             'daily ' if self.daily else '',
             'minimal ' if self.minimal else '',
             self.release,
+            self.arch,
             self.name,
             self.region
         )
@@ -114,7 +119,7 @@ class AWS(Image):
     def filter(self):
         """Create filter."""
         return [
-            'arch=amd64',
+            'arch=%s' % self.arch,
             'endpoint=https://ec2.%s.amazonaws.com' % self.region,
             'region=%s' % self.region,
             'release=%s' % self.release,
@@ -128,23 +133,11 @@ class AWSChina(AWS):
 
     name = 'AWS China'
 
-    def __init__(self, release=None, region=None, root_store='ssd'):
-        """Initialize AWS China instance.
-
-        No daily or minimal images.
-
-        Args:
-            release: str, Ubuntu release codename
-            region: str, Cloud region
-            root_store: str, either ssd or instance
-        """
-        super().__init__(release, region, root_store)
-
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=amd64',
+            'arch=%s' % self.arch,
             'endpoint=https://ec2.%s.amazonaws.com.cn' % self.region,
             'region=%s' % self.region,
             'release=%s' % self.release,
@@ -158,23 +151,11 @@ class AWSGovCloud(AWS):
 
     name = 'AWS GovCloud'
 
-    def __init__(self, release=None, region=None, root_store='ssd'):
-        """Initialize AWS instance.
-
-        No daily or minimal images.
-
-        Args:
-            release: str, Ubuntu release codename
-            region: str, Cloud region
-            root_store: str, either ssd or instance
-        """
-        super().__init__(release, region, root_store)
-
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=amd64',
+            'arch=%s' % self.arch,
             'endpoint=https://ec2.%s.amazonaws-govcloud.com' % self.region,
             'region=%s' % self.region,
             'release=%s' % self.release,
@@ -188,26 +169,28 @@ class Azure(Image):
 
     name = 'Azure'
 
-    def __init__(self, release=None, region=None, daily=False):
+    def __init__(self, release, arch, region, daily=False):
         """Initialize Azure instance.
 
         No minimal images.
 
         Args:
             release: str, Ubuntu release codename
+            arch: str, architecture of image
             region: str, Cloud region
             daily: boolean, find daily image (default: false)
         """
-        super().__init__(release, daily)
+        super().__init__(release, arch, daily)
 
         self.region = region
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s image for %s (%s)' % (
+        return '%s%s%s (%s) image for %s (%s)' % (
             'daily ' if self.daily else '',
             'minimal ' if self.minimal else '',
             self.release,
+            self.arch,
             self.name,
             self.region
         )
@@ -216,7 +199,7 @@ class Azure(Image):
     def filter(self):
         """Create filter."""
         return [
-            'arch=amd64',
+            'arch=%s' % self.arch,
             'endpoint=https://management.core.windows.net/',
             'region=%s' % self.region,
             'release=%s' % self.release
@@ -228,25 +211,27 @@ class GCE(Image):
 
     name = 'GCE'
 
-    def __init__(self, release=None, region=None, daily=False, minimal=False):
+    def __init__(self, release, arch, region, daily=False, minimal=False):
         """Initialize GCE instance.
 
         Args:
             release: str, Ubuntu release codename
+            arch: str, architecture of image
             region: str, Cloud region
             daily: boolean, find daily image (default: false)
             minimal: boolean, find minimal image (default: false)
         """
-        super().__init__(release, daily, minimal)
+        super().__init__(release, arch, daily, minimal)
 
         self.region = region
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s image for %s (%s)' % (
+        return '%s%s%s (%s) image for %s (%s)' % (
             'daily ' if self.daily else '',
             'minimal ' if self.minimal else '',
             self.release,
+            self.arch,
             self.name,
             self.region
         )
@@ -255,7 +240,7 @@ class GCE(Image):
     def filter(self):
         """Create filter."""
         return [
-            'arch=amd64',
+            'arch=%s' % self.arch,
             'endpoint=https://www.googleapis.com',
             'region=%s' % self.region,
             'release=%s' % self.release
@@ -266,19 +251,6 @@ class KVM(Image):
     """KVM class."""
 
     name = 'KVM'
-
-    def __init__(self, release=None, arch='amd64', daily=False, minimal=False):
-        """Initialize KVM instance.
-
-        Args:
-            release: str, Ubuntu release codename
-            arch: str, base architecture
-            daily: boolean, find daily image (default: false)
-            minimal: boolean, find minimal image (default: false)
-        """
-        super().__init__(release, daily, minimal)
-
-        self.arch = arch
 
     @property
     def filter(self):
@@ -295,19 +267,6 @@ class LXC(Image):
 
     name = 'LXC'
 
-    def __init__(self, release=None, arch='amd64', daily=False, minimal=False):
-        """Initialize KVM instance.
-
-        Args:
-            release: str, Ubuntu release codename
-            arch: str, base architecture
-            daily: boolean, find daily image (default: false)
-            minimal: boolean, find minimal image (default: false)
-        """
-        super().__init__(release, daily, minimal)
-
-        self.arch = arch
-
     @property
     def filter(self):
         """Create filter."""
@@ -323,8 +282,7 @@ class MAASv2(Image):
 
     name = 'MAAS (v2)'
 
-    def __init__(self, release=None, arch='amd64', kernel='generic',
-                 daily=False):
+    def __init__(self, release, arch, kernel='generic', daily=False):
         """Initialize MAAS v2 instance.
 
         This uses the older v2 API.
@@ -335,9 +293,8 @@ class MAASv2(Image):
             kernel: str, kernel flavor (default: generic)
             daily: boolean, find daily image (default: false)
         """
-        super().__init__(release, daily)
+        super().__init__(release, arch, daily)
 
-        self.arch = arch
         self.kernel = kernel
 
         if daily:
@@ -361,7 +318,7 @@ class MAASv3(Image):
 
     name = 'MAAS'
 
-    def __init__(self, release=None, arch='amd64', kernel='generic'):
+    def __init__(self, release, arch, kernel='generic'):
         """Initialize MAAS v3 instance.
 
         The newest image API.
@@ -371,9 +328,8 @@ class MAASv3(Image):
             arch: str, base architecture
             kernel: str, kernel flavor (default: generic)
         """
-        super().__init__(release)
+        super().__init__(release, arch)
 
-        self.arch = arch
         self.kernel = kernel
         self.mirror_url = 'https://images.maas.io/ephemeral-v3/daily/'
 
