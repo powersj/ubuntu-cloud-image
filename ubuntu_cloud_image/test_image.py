@@ -1,4 +1,4 @@
-# This file is part of ubuntu-bug-triage. See LICENSE file for license info.
+# This file is part of ubuntu-cloud-image. See LICENSE file for license info.
 """Test view module."""
 from .image import (
     Image, AWS, AWSChina, AWSGovCloud, Azure, GCE, KVM, LXC, MAASv2, MAASv3
