@@ -38,7 +38,7 @@ PKGS, LINKS = gather_deps()
 
 setup(
     name='ubuntu-cloud-image',
-    version='18.1',
+    version='19.1',
     description='Download the newest Ubuntu cloud images.',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
@@ -55,8 +55,7 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License v3 or later"
-        " (GPLv3+)",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3 :: Only",
