@@ -1,6 +1,7 @@
 # Ubuntu Cloud Image
 
 [![Build Status](https://travis-ci.org/powersj/ubuntu-cloud-image.svg?branch=master)](https://travis-ci.org/powersj/ubuntu-cloud-image) [![Snap Status](https://build.snapcraft.io/badge/powersj/ubuntu-cloud-image.svg)](https://build.snapcraft.io/user/powersj/ubuntu-cloud-image)
+
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/ubuntu-cloud-image)
 
 Find the latest Ubuntu images for clouds
