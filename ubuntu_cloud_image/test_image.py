@@ -6,7 +6,7 @@ from .image import (
 
 
 def test_image():
-    """TODO."""
+    """Test basic image."""
     image = Image('bionic', 'amd64')
     assert image.mirror_url == 'https://cloud-images.ubuntu.com/releases/'
     assert not image.daily
@@ -16,7 +16,7 @@ def test_image():
 
 
 def test_image_daily():
-    """TODO."""
+    """Test daily image."""
     image = Image('trusty', 's390x', daily=True)
     assert image.mirror_url == 'https://cloud-images.ubuntu.com/daily/'
     assert image.daily
@@ -25,7 +25,7 @@ def test_image_daily():
 
 
 def test_image_daily_minimal():
-    """TODO."""
+    """Test daily minimal image."""
     image = Image('bionic', 'ppc64el', minimal=True, daily=True)
     assert image.mirror_url == 'https://cloud-images.ubuntu.com/minimal/daily/'
     assert image.daily
@@ -34,7 +34,7 @@ def test_image_daily_minimal():
 
 
 def test_image_minimal():
-    """TODO."""
+    """Test minimal image."""
     image = Image('xenial', 'arm64', minimal=True)
     assert image.mirror_url == (
         'https://cloud-images.ubuntu.com/minimal/releases/'
@@ -45,7 +45,7 @@ def test_image_minimal():
 
 
 def test_aws():
-    """TODO."""
+    """Test aws image."""
     release = 'xenial'
     arch = 'amd64'
     region = 'us-west-2'
@@ -63,7 +63,7 @@ def test_aws():
 
 
 def test_aws_daily():
-    """TODO."""
+    """Test aws daily image."""
     release = 'xenial'
     arch = 'amd64'
     region = 'us-west-2'
@@ -83,7 +83,7 @@ def test_aws_daily():
 
 
 def test_aws_daily_minimal():
-    """TODO."""
+    """Test aws daily minimal image."""
     release = 'trusty'
     arch = 'ppc64el'
     region = 'us-west-1'
@@ -103,7 +103,7 @@ def test_aws_daily_minimal():
 
 
 def test_aws_minimal():
-    """TODO."""
+    """Test aws minimal image."""
     release = 'bionic'
     arch = 'arm64'
     region = 'us-east-2'
@@ -123,7 +123,7 @@ def test_aws_minimal():
 
 
 def test_aws_china():
-    """TODO."""
+    """Test aws china image."""
     release = 'xenial'
     arch = 'amd64'
     region = 'us-west-2'
@@ -143,7 +143,7 @@ def test_aws_china():
 
 
 def test_aws_govcloud():
-    """TODO."""
+    """Test aws govcloud image."""
     release = 'xenial'
     arch = 'amd64'
     region = 'us-west-2'
@@ -163,7 +163,7 @@ def test_aws_govcloud():
 
 
 def test_azure():
-    """TODO."""
+    """Test azure image."""
     release = 'bionic'
     arch = 'amd64'
     region = 'west-us-2'
@@ -181,7 +181,7 @@ def test_azure():
 
 
 def test_azure_daily():
-    """TODO."""
+    """Test azure daily image."""
     release = 'disco'
     arch = 'amd64'
     region = 'west-us-2'
@@ -199,7 +199,7 @@ def test_azure_daily():
 
 
 def test_gce():
-    """TODO."""
+    """Test gce image."""
     release = 'trusty'
     arch = 'amd64'
     region = 'us-central1'
@@ -215,7 +215,7 @@ def test_gce():
 
 
 def test_gce_daily():
-    """TODO."""
+    """Test gce daily image."""
     release = 'xenial'
     arch = 'arm64'
     region = 'us-west2'
@@ -233,7 +233,7 @@ def test_gce_daily():
 
 
 def test_gce_daily_minimal():
-    """TODO."""
+    """Test gce daily minimal image."""
     release = 'trusty'
     arch = 'amd64'
     region = 'us-central1'
@@ -251,7 +251,7 @@ def test_gce_daily_minimal():
 
 
 def test_gce_minimal():
-    """TODO."""
+    """Test gce minimal image."""
     release = 'bionic'
     arch = 'ppc64el'
     region = 'us-east1'
@@ -269,7 +269,7 @@ def test_gce_minimal():
 
 
 def test_kvm():
-    """TODO."""
+    """Test kvm image."""
     release = 'xenial'
     arch = 'amd64'
 
@@ -283,7 +283,7 @@ def test_kvm():
 
 
 def test_lxc():
-    """TODO."""
+    """Test lxc image."""
     release = 'xenial'
     arch = 'amd64'
 
@@ -297,7 +297,7 @@ def test_lxc():
 
 
 def test_maasv2():
-    """TODO."""
+    """Test maasv2 image."""
     release = 'cosmic'
     arch = 'ppc64el'
     kernel = 'generic'
@@ -313,7 +313,7 @@ def test_maasv2():
 
 
 def test_maasv2_daily():
-    """TODO."""
+    """Test maasv2 daily image."""
     release = 'cosmic'
     arch = 'ppc64el'
     kernel = 'generic'
@@ -329,7 +329,7 @@ def test_maasv2_daily():
 
 
 def test_maasv3():
-    """TODO."""
+    """Test maasv3 image."""
     release = 'bionic'
     arch = 'amd64'
     kernel = 'generic'
