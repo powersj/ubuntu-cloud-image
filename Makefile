@@ -5,8 +5,10 @@ SETUP  := $(PYTHON) setup.py
 
 clean:
 	$(SETUP) clean
-	rm -rf .tox .eggs *.egg-info *.snap *.tar.bz2 build dist venv
-	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete
+	rm -f .coverage .eggs *.egg-info *.snap *.tar.bz2
+	rm -rf .pytest_cache/ .tox/ htmlcov build dist venv
+	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete\
+
 
 install:
 	pip install -r requirements.txt
