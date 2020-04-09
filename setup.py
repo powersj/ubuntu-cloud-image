@@ -22,7 +22,7 @@ def gather_deps():
          list of packages and dependency links.
 
     """
-    default = open('requirements.txt', 'r').readlines()
+    default = open('requirements.txt', 'r').read().splitlines()
     new_pkgs = []
     links = []
     for resource in default:
