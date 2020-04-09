@@ -38,7 +38,7 @@ PKGS, LINKS = gather_deps()
 
 setup(
     name='ubuntu-cloud-image',
-    version='20.1',
+    version='20.2',
     description='Download the newest Ubuntu cloud images.',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
