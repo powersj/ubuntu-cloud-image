@@ -30,12 +30,6 @@ Users can obtain ubuntu-cloud-image as a snap:
 snap install ubuntu-cloud-image
 ```
 
-Or via PyPI:
-
-```shell
-pip3 install ubuntu-cloud-image
-```
-
 ## Usage
 
 At the very least a user needs to provide the cloud name and Ubuntu release's codename to find image information for:
