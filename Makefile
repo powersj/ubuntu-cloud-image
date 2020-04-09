@@ -5,10 +5,10 @@ SETUP  := $(PYTHON) setup.py
 
 clean:
 	$(SETUP) clean
-	rm -f .coverage .eggs  *.snap *.tar.bz2
-	rm -rf *.egg-info/ .pytest_cache/ .tox/ htmlcov build dist venv
-	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete\
-
+	rm -f .coverage *.snap *.tar.bz2
+	rm -rf build/ dist/ prime/ stage/ htmlcov/ venv/
+	rm -rf *.eggs/ *.egg-info/ .pytest_cache/ .tox/
+	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete
 
 install:
 	pip install -r requirements.txt
@@ -24,8 +24,9 @@ snap:
 	snapcraft cleanbuild --debug
 
 test:
-	$(SETUP) check -r -s
-	tox
+	pytest --cov=ubuntu_cloud_image ubuntu_cloud_image
+	flake8 --max-line-length=88 ubuntu_cloud_image setup.py
+	black --check .
 
 venv:
 	$(PYTHON) -m virtualenv -p /usr/bin/$(PYTHON) venv

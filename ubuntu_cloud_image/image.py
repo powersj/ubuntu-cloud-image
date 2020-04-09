@@ -11,7 +11,7 @@ from .streams import Streams
 class Image:
     """Base cloud image to set default mirror URL and keyring."""
 
-    name = 'unknown'
+    name = "unknown"
 
     def __init__(self, release, arch, daily=False, minimal=False):
         """Initialize base image."""
@@ -26,12 +26,12 @@ class Image:
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s (%s) image for %s' % (
-            'daily ' if self.daily else '',
-            'minimal ' if self.minimal else '',
+        return "%s%s%s (%s) image for %s" % (
+            "daily " if self.daily else "",
+            "minimal " if self.minimal else "",
             self.release,
             self.arch,
-            self.name
+            self.name,
         )
 
     @property
@@ -41,18 +41,18 @@ class Image:
 
     def _mirror_url(self):
         """Create mirror URL baed on filter settings."""
-        mirror_base_url = 'https://cloud-images.ubuntu.com'
+        mirror_base_url = "https://cloud-images.ubuntu.com"
 
         if self.minimal and self.daily:
-            return '%s/minimal/daily/' % mirror_base_url
+            return "%s/minimal/daily/" % mirror_base_url
 
         if self.minimal:
-            return '%s/minimal/releases/' % mirror_base_url
+            return "%s/minimal/releases/" % mirror_base_url
 
         if self.daily:
-            return '%s/daily/' % mirror_base_url
+            return "%s/daily/" % mirror_base_url
 
-        return '%s/releases/' % mirror_base_url
+        return "%s/releases/" % mirror_base_url
 
     def search(self):
         """Find list of images with the setup filter.
@@ -64,15 +64,12 @@ class Image:
             SystemExit: when no results found
 
         """
-        keyring_path = '/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg'
-        snap = os.getenv('SNAP')
+        keyring_path = "/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg"
+        snap = os.getenv("SNAP")
         if snap:
-            keyring_path = '%s%s' % (snap, keyring_path)
+            keyring_path = "%s%s" % (snap, keyring_path)
 
-        stream = Streams(
-            mirror_url=self.mirror_url,
-            keyring_path=keyring_path
-        )
+        stream = Streams(mirror_url=self.mirror_url, keyring_path=keyring_path)
 
         try:
             result = stream.query(self.filter)[0]
@@ -82,13 +79,15 @@ class Image:
         self._log.info(json.dumps(result, sort_keys=True, indent=4))
 
 
+# pylint: disable=C0330
 class AWS(Image):
     """AWS class."""
 
-    name = 'AWS'
+    name = "AWS"
 
-    def __init__(self, release, arch, region, root_store='ssd',
-                 daily=False, minimal=False):
+    def __init__(
+        self, release, arch, region, root_store="ssd", daily=False, minimal=False,
+    ):
         """Initialize AWS instance.
 
         Args:
@@ -106,68 +105,68 @@ class AWS(Image):
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s (%s) image for %s (%s)' % (
-            'daily ' if self.daily else '',
-            'minimal ' if self.minimal else '',
+        return "%s%s%s (%s) image for %s (%s)" % (
+            "daily " if self.daily else "",
+            "minimal " if self.minimal else "",
             self.release,
             self.arch,
             self.name,
-            self.region
+            self.region,
         )
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'endpoint=https://ec2.%s.amazonaws.com' % self.region,
-            'region=%s' % self.region,
-            'release=%s' % self.release,
-            'root_store=%s' % self.root_store,
-            'virt=hvm',
+            "arch=%s" % self.arch,
+            "endpoint=https://ec2.%s.amazonaws.com" % self.region,
+            "region=%s" % self.region,
+            "release=%s" % self.release,
+            "root_store=%s" % self.root_store,
+            "virt=hvm",
         ]
 
 
 class AWSChina(AWS):
     """AWS China class."""
 
-    name = 'AWS China'
+    name = "AWS China"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'endpoint=https://ec2.%s.amazonaws.com.cn' % self.region,
-            'region=%s' % self.region,
-            'release=%s' % self.release,
-            'root_store=%s' % self.root_store,
-            'virt=hvm',
+            "arch=%s" % self.arch,
+            "endpoint=https://ec2.%s.amazonaws.com.cn" % self.region,
+            "region=%s" % self.region,
+            "release=%s" % self.release,
+            "root_store=%s" % self.root_store,
+            "virt=hvm",
         ]
 
 
 class AWSGovCloud(AWS):
     """AWS GovCloud class."""
 
-    name = 'AWS GovCloud'
+    name = "AWS GovCloud"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'endpoint=https://ec2.%s.amazonaws-govcloud.com' % self.region,
-            'region=%s' % self.region,
-            'release=%s' % self.release,
-            'root_store=%s' % self.root_store,
-            'virt=hvm',
+            "arch=%s" % self.arch,
+            "endpoint=https://ec2.%s.amazonaws-govcloud.com" % self.region,
+            "region=%s" % self.region,
+            "release=%s" % self.release,
+            "root_store=%s" % self.root_store,
+            "virt=hvm",
         ]
 
 
 class Azure(Image):
     """Azure class."""
 
-    name = 'Azure'
+    name = "Azure"
 
     def __init__(self, release, arch, region, daily=False):
         """Initialize Azure instance.
@@ -186,30 +185,30 @@ class Azure(Image):
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s (%s) image for %s (%s)' % (
-            'daily ' if self.daily else '',
-            'minimal ' if self.minimal else '',
+        return "%s%s%s (%s) image for %s (%s)" % (
+            "daily " if self.daily else "",
+            "minimal " if self.minimal else "",
             self.release,
             self.arch,
             self.name,
-            self.region
+            self.region,
         )
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'endpoint=https://management.core.windows.net/',
-            'region=%s' % self.region,
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "endpoint=https://management.core.windows.net/",
+            "region=%s" % self.region,
+            "release=%s" % self.release,
         ]
 
 
 class GCE(Image):
     """GCE class."""
 
-    name = 'GCE'
+    name = "GCE"
 
     def __init__(self, release, arch, region, daily=False, minimal=False):
         """Initialize GCE instance.
@@ -227,62 +226,62 @@ class GCE(Image):
 
     def __repr__(self):
         """Return string representation of class."""
-        return '%s%s%s (%s) image for %s (%s)' % (
-            'daily ' if self.daily else '',
-            'minimal ' if self.minimal else '',
+        return "%s%s%s (%s) image for %s (%s)" % (
+            "daily " if self.daily else "",
+            "minimal " if self.minimal else "",
             self.release,
             self.arch,
             self.name,
-            self.region
+            self.region,
         )
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'endpoint=https://www.googleapis.com',
-            'region=%s' % self.region,
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "endpoint=https://www.googleapis.com",
+            "region=%s" % self.region,
+            "release=%s" % self.release,
         ]
 
 
 class KVM(Image):
     """KVM class."""
 
-    name = 'KVM'
+    name = "KVM"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'ftype=disk1.img',
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "ftype=disk1.img",
+            "release=%s" % self.release,
         ]
 
 
 class LXC(Image):
     """LXC class."""
 
-    name = 'LXC'
+    name = "LXC"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'ftype=squashfs',
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "ftype=squashfs",
+            "release=%s" % self.release,
         ]
 
 
 class MAASv2(Image):
     """MAAS v2 class."""
 
-    name = 'MAAS (v2)'
+    name = "MAAS (v2)"
 
-    def __init__(self, release, arch, kernel='generic', daily=False):
+    def __init__(self, release, arch, kernel="generic", daily=False):
         """Initialize MAAS v2 instance.
 
         This uses the older v2 API.
@@ -298,27 +297,27 @@ class MAASv2(Image):
         self.kernel = kernel
 
         if daily:
-            self.mirror_url = 'https://images.maas.io/ephemeral-v2/daily/'
+            self.mirror_url = "https://images.maas.io/ephemeral-v2/daily/"
         else:
-            self.mirror_url = 'https://images.maas.io/ephemeral-v2/releases/'
+            self.mirror_url = "https://images.maas.io/ephemeral-v2/releases/"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'ftype=root-image.gz',
-            'kflavor=%s' % self.kernel,
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "ftype=root-image.gz",
+            "kflavor=%s" % self.kernel,
+            "release=%s" % self.release,
         ]
 
 
 class MAASv3(Image):
     """MAAS v3 class."""
 
-    name = 'MAAS'
+    name = "MAAS"
 
-    def __init__(self, release, arch, kernel='generic'):
+    def __init__(self, release, arch, kernel="generic"):
         """Initialize MAAS v3 instance.
 
         The newest image API.
@@ -331,14 +330,14 @@ class MAASv3(Image):
         super().__init__(release, arch)
 
         self.kernel = kernel
-        self.mirror_url = 'https://images.maas.io/ephemeral-v3/daily/'
+        self.mirror_url = "https://images.maas.io/ephemeral-v3/daily/"
 
     @property
     def filter(self):
         """Create filter."""
         return [
-            'arch=%s' % self.arch,
-            'ftype=squashfs',
-            'kflavor=%s' % self.kernel,
-            'release=%s' % self.release
+            "arch=%s" % self.arch,
+            "ftype=squashfs",
+            "kflavor=%s" % self.kernel,
+            "release=%s" % self.release,
         ]
