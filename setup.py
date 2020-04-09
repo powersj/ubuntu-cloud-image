@@ -67,6 +67,7 @@ setup(
     ],
     keywords=['ubuntu', 'image', 'cloud'],
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         'console_scripts':
             ['ubuntu-cloud-image=ubuntu_cloud_image.__main__:launch']
