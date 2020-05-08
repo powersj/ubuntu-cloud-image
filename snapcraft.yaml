@@ -46,6 +46,16 @@ parts:
         source: https://github.com/powersj/ubuntu-cloud-image
         source-type: git
         stage-packages:
-            - ubuntu-cloudimage-keyring
             - simplestreams
+    keyring:
+        plugin: nil
+        stage-packages:
+            - ubuntu-keyring
+        stage:
+            - usr/share/keyrings/ubuntu-cloudimage-keyring.gpg
+    gpgv:
+        plugin: nil
+        stage-packages:
             - gpgv
+        stage:
+            - usr/bin/gpgv
