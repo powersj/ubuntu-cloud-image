@@ -24,11 +24,10 @@ description: |
     about the requested image. If no image matches the specific filter
     then an empty JSON array is printed.
 
-version: git
-version-script: git rev-parse --short HEAD
 base: core18
 grade: stable
 confinement: strict
+adopt-info: ubuntu-cloud-image
 environment:
     LC_ALL: C.UTF-8
     LANG: C.UTF-8
@@ -47,6 +46,11 @@ parts:
         source-type: git
         stage-packages:
             - simplestreams
+        override-pull: |
+            snapcraftctl pull
+            DATE="$(date +%Y.%m.%d)"
+            GIT="$(git rev-parse --short HEAD)"
+            snapcraftctl set-version "${DATE}+git${GIT}"
     keyring:
         plugin: nil
         stage-packages:
