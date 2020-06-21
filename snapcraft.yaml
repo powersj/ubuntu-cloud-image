@@ -24,7 +24,7 @@ description: |
     about the requested image. If no image matches the specific filter
     then an empty JSON array is printed.
 
-base: core18
+base: core20
 grade: stable
 confinement: strict
 adopt-info: ubuntu-cloud-image
@@ -44,6 +44,10 @@ parts:
         plugin: python
         source: https://github.com/powersj/ubuntu-cloud-image
         source-type: git
+        python-packages:
+        - pip
+        - setuptools
+        - wheel
         stage-packages:
             - simplestreams
         override-pull: |
