@@ -45,16 +45,25 @@ parts:
         source: https://github.com/powersj/ubuntu-cloud-image
         source-type: git
         python-packages:
-        - pip
-        - setuptools
-        - wheel
-        stage-packages:
-            - simplestreams
+            - pip
+            - setuptools
+            - wheel
+        stage:
+            - bin/ubuntu-cloud-image
+            - lib/python3.8/site-packages/ubuntu_cloud_image
         override-pull: |
             snapcraftctl pull
             DATE="$(date +%Y.%m.%d)"
             GIT="$(git rev-parse --short HEAD)"
             snapcraftctl set-version "${DATE}+git${GIT}"
+    simplestreams:
+        plugin: python
+        source: https://git.launchpad.net/simplestreams
+        source-type: git
+        python-packages:
+            - pip
+            - setuptools
+            - wheel
     keyring:
         plugin: nil
         stage-packages:
