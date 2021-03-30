@@ -6,7 +6,7 @@ SETUP  := $(PYTHON) setup.py
 clean:
 	$(SETUP) clean
 	rm -f .coverage *.snap *.tar.bz2
-	rm -rf build/ dist/ prime/ stage/ htmlcov/ venv/
+	rm -rf build/ dist/ prime/ stage/ htmlcov/
 	rm -rf *.eggs/ *.egg-info/ .pytest_cache/ .tox/
 	@find . -regex '.*\(__pycache__\|\.py[co]\)' -delete
 
@@ -29,7 +29,7 @@ test:
 	black --check .
 
 venv:
-	$(PYTHON) -m virtualenv -p /usr/bin/$(PYTHON) venv
-	venv/bin/pip install -Ur requirements.txt -Ur requirements-test.txt
+	$(PYTHON) -m virtualenv -p /usr/bin/$(PYTHON) .venv
+	.venv/bin/pip install -Ur requirements.txt -Ur requirements-test.txt
 	@echo "Now run the following to activate the virtual env:"
-	@echo ". venv/bin/activate"
+	@echo ". .venv/bin/activate"
